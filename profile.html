@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Julia's Craft</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff9fb;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #ff6b8b 0%, #ff8e9e 100%);
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Brush Script MT', cursive;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        #cartCount {
+            background: white;
+            color: #ff6b8b;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        .profile-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .profile-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .profile-header h1 {
+            font-size: 36px;
+            color: #ff6b8b;
+        }
+        .profile-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+        }
+        @media (max-width: 768px) {
+            .profile-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        .profile-sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        .profile-main {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .user-avatar {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b8b 0%, #ff8e9e 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 20px;
+        }
+        .profile-menu {
+            list-style: none;
+        }
+        .profile-menu li {
+            margin-bottom: 10px;
+        }
+        .profile-menu a {
+            display: block;
+            padding: 12px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .profile-menu a:hover,
+        .profile-menu a.active {
+            background: #fff5f8;
+            color: #ff6b8b;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #ff6b8b;
+            outline: none;
+        }
+        .btn {
+            display: inline-block;
+            background: #ff6b8b;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #ff4b7b;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #666;
+        }
+        .orders-list {
+            margin-top: 30px;
+        }
+        .order-card {
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        .order-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .order-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-preparing { background: #cce5ff; color: #004085; }
+        .status-ready { background: #d4edda; color: #155724; }
+        .status-delivered { background: #d1ecf1; color: #0c5460; }
+        .order-items {
+            margin-top: 15px;
+        }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f8f8f8;
+        }
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        footer {
+            background: #ff6b8b;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .success-message {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">Julia's Craft 🌸</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop Flowers</a>
+            <a href="about.html">Our Story</a>
+            <a href="contact.html">Contact</a>
+            <a href="login.html" id="loginBtn">Login</a>
+            <a href="cart.html">🛒 Cart <span id="cartCount">0</span></a>
+        </div>
+    </nav>
+
+    <!-- Profile Container -->
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1>My Profile</h1>
+            <p>Manage your account and orders</p>
+        </div>
+
+        <div class="profile-content">
+            <!-- Sidebar -->
+            <div class="profile-sidebar">
+                <div class="user-avatar">
+                    <div class="avatar" id="userAvatar">JS</div>
+                    <h2 id="userName">Loading...</h2>
+                    <p id="userEmail">Loading...</p>
+                </div>
+                
+                <ul class="profile-menu">
+                    <li><a href="#" class="active" onclick="showTab('personal')">👤 Personal Information</a></li>
+                    <li><a href="#" onclick="showTab('orders')">📦 My Orders</a></li>
+                    <li><a href="#" onclick="showTab('address')">📍 Address Book</a></li>
+                    <li><a href="#" onclick="showTab('security')">🔒 Security</a></li>
+                    <li><a href="index.html">🏠 Back to Home</a></li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="profile-main">
+                <!-- Success Message -->
+                <div class="success-message" id="successMessage">
+                    Profile updated successfully!
+                </div>
+
+                <!-- Personal Information Tab -->
+                <div id="personalTab" class="tab-content active">
+                    <h2 style="color: #ff6b8b; margin-bottom: 30px;">Personal Information</h2>
+                    
+                    <form id="personalForm">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" readonly style="background: #f8f8f8;">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="birthdate">Birthdate (Optional)</label>
+                            <input type="date" id="birthdate">
+                        </div>
+                        
+                        <button type="submit" class="btn">Save Changes</button>
+                    </form>
+                </div>
+
+                <!-- My Orders Tab -->
+                <div id="ordersTab" class="tab-content">
+                    <h2 style="color: #ff6b8b; margin-bottom: 30px;">My Orders</h2>
+                    
+                    <div id="ordersList">
+                        <p>Loading your orders...</p>
+                    </div>
+                </div>
+
+                <!-- Address Book Tab -->
+                <div id="addressTab" class="tab-content">
+                    <h2 style="color: #ff6b8b; margin-bottom: 30px;">Address Book</h2>
+                    
+                    <div id="addressList">
+                        <p>No saved addresses yet.</p>
+                    </div>
+                    
+                    <button class="btn" onclick="showAddressForm()" style="margin-top: 20px;">+ Add New Address</button>
+                    
+                    <!-- Add Address Form (Hidden by default) -->
+                    <div id="addressForm" style="display: none; margin-top: 30px;">
+                        <h3>Add New Address</h3>
+                        <form id="newAddressForm">
+                            <div class="form-group">
+                                <label for="addressName">Address Name (e.g., Home, Office)</label>
+                                <input type="text" id="addressName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="addressLine">Complete Address</label>
+                                <textarea id="addressLine" rows="3" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="addressCity">City</label>
+                                <input type="text" id="addressCity" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="addressProvince">Province</label>
+                                <input type="text" id="addressProvince" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="addressZip">Zip Code</label>
+                                <input type="text" id="addressZip" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="addressPhone">Contact Number for this Address</label>
+                                <input type="tel" id="addressPhone">
+                            </div>
+                            
+                            <button type="submit" class="btn">Save Address</button>
+                            <button type="button" class="btn btn-secondary" onclick="hideAddressForm()">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Security Tab -->
+                <div id="securityTab" class="tab-content">
+                    <h2 style="color: #ff6b8b; margin-bottom: 30px;">Security Settings</h2>
+                    
+                    <form id="securityForm">
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" required>
+                        </div>
+                        
+                        <button type="submit" class="btn">Change Password</button>
+                    </form>
+                    
+                    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
+                        <h3 style="color: #ff6b8b; margin-bottom: 15px;">Account Actions</h3>
+                        <button class="btn btn-secondary" onclick="logout()" style="margin-right: 10px;">Logout</button>
+                        <button class="btn btn-secondary" onclick="deleteAccount()" style="background: #ff4444;">Delete Account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Julia's Craft - All flowers handmade with love</p>
+        <p>Contact: julias.craft@email.com | 09123456789</p>
+    </footer>
+
+    <script>
+        let currentUser = null;
+        
+        // Check Login Status
+        function checkLoginStatus() {
+            currentUser = JSON.parse(sessionStorage.getItem('juliasCraft_user') || 'null');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (!currentUser) {
+                alert('Please login to access your profile');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Update UI
+            loginBtn.textContent = `👋 ${currentUser.name}`;
+            loginBtn.href = "profile.html";
+            
+            const logoutBtn = document.createElement('a');
+            logoutBtn.href = "#";
+            logoutBtn.textContent = "Logout";
+            logoutBtn.style.marginLeft = "10px";
+            logoutBtn.style.color = "white";
+            logoutBtn.style.textDecoration = "none";
+            logoutBtn.onclick = logout;
+            loginBtn.parentNode.appendChild(logoutBtn);
+            
+            // Load user data
+            loadUserData();
+        }
+
+        // Load User Data
+        function loadUserData() {
+            if (!currentUser) return;
+            
+            // Update avatar
+            const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            document.getElementById('userAvatar').textContent = initials;
+            
+            // Update user info
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userEmail').textContent = currentUser.email;
+            
+            // Fill form fields
+            document.getElementById('fullName').value = currentUser.name;
+            document.getElementById('email').value = currentUser.email;
+            document.getElementById('phone').value = currentUser.contact || '';
+            
+            // Load orders
+            loadOrders();
+            
+            // Load addresses
+            loadAddresses();
+        }
+
+        // Switch Tabs
+        function showTab(tabName) {
+            // Update menu
+            document.querySelectorAll('.profile-menu a').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show tab content
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // Update Personal Information
+        document.getElementById('personalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const users = JSON.parse(localStorage.getItem('juliasCraft_users') || '[]');
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            
+            if (userIndex !== -1) {
+                const updatedUser = {
+                    ...users[userIndex],
+                    name: document.getElementById('fullName').value,
+                    contact: document.getElementById('phone').value
+                };
+                
+                users[userIndex] = updatedUser;
+                localStorage.setItem('juliasCraft_users', JSON.stringify(users));
+                
+                // Update session
+                sessionStorage.setItem('juliasCraft_user', JSON.stringify(updatedUser));
+                currentUser = updatedUser;
+                
+                // Update UI
+                document.getElementById('userName').textContent = updatedUser.name;
+                document.getElementById('userAvatar').textContent = 
+                    updatedUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                
+                showSuccessMessage();
+            }
+        });
+
+        // Load Orders
+        function loadOrders() {
+            const orders = JSON.parse(localStorage.getItem('juliasCraft_orders') || '[]');
+            const userOrders = orders.filter(order => order.customerId === currentUser.id).reverse();
+            const container = document.getElementById('ordersList');
+            
+            if (userOrders.length === 0) {
+                container.innerHTML = '<p>You have no orders yet. <a href="shop.html" style="color: #ff6b8b;">Start shopping!</a></p>';
+                return;
+            }
+            
+            let ordersHtml = '';
+            userOrders.forEach(order => {
+                ordersHtml += `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div>
+                                <strong>Order #${order.id}</strong>
+                                <div style="font-size: 14px; color: #666; margin-top: 5px;">
+                                    ${new Date(order.orderDate).toLocaleDateString()}
+                                </div>
+                            </div>
+                            <div class="order-status status-${order.status.toLowerCase()}">
+                                ${order.status}
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <strong>Total: ₱${order.totalAmount.toLocaleString()}</strong>
+                            <div style="font-size: 14px; color: #666;">
+                                Payment: ${order.paymentMethod} (${order.paymentStatus})
+                            </div>
+                        </div>
+                        
+                        <div class="order-items">
+                            ${order.items.map(item => `
+                                <div class="order-item">
+                                    <div>${item.name} x${item.quantity}</div>
+                                    <div>₱${(item.price * item.quantity).toLocaleString()}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div style="margin-top: 15px; text-align: right;">
+                            <button class="btn" onclick="viewOrderDetails(${order.id})" style="padding: 8px 15px; font-size: 14px;">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = ordersHtml;
+        }
+
+        // View Order Details
+        function viewOrderDetails(orderId) {
+            const orders = JSON.parse(localStorage.getItem('juliasCraft_orders') || '[]');
+            const order = orders.find(o => o.id === orderId);
+            
+            if (order) {
+                let details = `Order #${order.id}\n`;
+                details += `Date: ${new Date(order.orderDate).toLocaleDateString()}\n`;
+                details += `Status: ${order.status}\n`;
+                details += `Payment: ${order.paymentMethod} (${order.paymentStatus})\n`;
+                details += `Total: ₱${order.totalAmount}\n\n`;
+                details += `Items:\n`;
+                
+                order.items.forEach(item => {
+                    details += `- ${item.name} x${item.quantity} = ₱${item.price * item.quantity}\n`;
+                });
+                
+                details += `\nDelivery Address:\n`;
+                details += `${order.deliveryAddress.address}\n`;
+                details += `${order.deliveryAddress.city}, ${order.deliveryAddress.province} ${order.deliveryAddress.zipCode}\n`;
+                
+                alert(details);
+            }
+        }
+
+        // Load Addresses
+        function loadAddresses() {
+            const addresses = currentUser.addresses || [];
+            const container = document.getElementById('addressList');
+            
+            if (addresses.length === 0) {
+                container.innerHTML = '<p>No saved addresses yet.</p>';
+                return;
+            }
+            
+            let addressesHtml = '';
+            addresses.forEach((address, index) => {
+                addressesHtml += `
+                    <div class="order-card" style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <strong>${address.name}</strong>
+                                <div style="margin-top: 10px;">
+                                    <p>${address.address}</p>
+                                    <p>${address.city}, ${address.province} ${address.zip}</p>
+                                    ${address.phone ? `<p>📞 ${address.phone}</p>` : ''}
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn" onclick="editAddress(${index})" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;">Edit</button>
+                                <button class="btn" onclick="deleteAddress(${index})" style="padding: 5px 10px; font-size: 12px; background: #ff4444;">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = addressesHtml;
+        }
+
+        // Show Address Form
+        function showAddressForm() {
+            document.getElementById('addressForm').style.display = 'block';
+        }
+
+        // Hide Address Form
+        function hideAddressForm() {
+            document.getElementById('addressForm').style.display = 'none';
+            document.getElementById('newAddressForm').reset();
+        }
+
+        // Add New Address
+        document.getElementById('newAddressForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const users = JSON.parse(localStorage.getItem('juliasCraft_users') || '[]');
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            
+            if (userIndex !== -1) {
+                const newAddress = {
+                    name: document.getElementById('addressName').value,
+                    address: document.getElementById('addressLine').value,
+                    city: document.getElementById('addressCity').value,
+                    province: document.getElementById('addressProvince').value,
+                    zip: document.getElementById('addressZip').value,
+                    phone: document.getElementById('addressPhone').value
+                };
+                
+                // Initialize addresses array if not exists
+                if (!users[userIndex].addresses) {
+                    users[userIndex].addresses = [];
+                }
+                
+                users[userIndex].addresses.push(newAddress);
+                localStorage.setItem('juliasCraft_users', JSON.stringify(users));
+                
+                // Update current user
+                currentUser = users[userIndex];
+                sessionStorage.setItem('juliasCraft_user', JSON.stringify(currentUser));
+                
+                // Reload addresses
+                loadAddresses();
+                hideAddressForm();
+                showSuccessMessage();
+            }
+        });
+
+        // Edit Address
+        function editAddress(index) {
+            const address = currentUser.addresses[index];
+            if (!address) return;
+            
+            // Fill form with address data
+            document.getElementById('addressName').value = address.name;
+            document.getElementById('addressLine').value = address.address;
+            document.getElementById('addressCity').value = address.city;
+            document.getElementById('addressProvince').value = address.province;
+            document.getElementById('addressZip').value = address.zip;
+            document.getElementById('addressPhone').value = address.phone || '';
+            
+            // Show form and change button text
+            showAddressForm();
+            const formTitle = document.querySelector('#addressForm h3');
+            formTitle.textContent = 'Edit Address';
+            
+            // Change form submit behavior
+            const form = document.getElementById('newAddressForm');
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                
+                const users = JSON.parse(localStorage.getItem('juliasCraft_users') || '[]');
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                
+                if (userIndex !== -1) {
+                    users[userIndex].addresses[index] = {
+                        name: document.getElementById('addressName').value,
+                        address: document.getElementById('addressLine').value,
+                        city: document.getElementById('addressCity').value,
+                        province: document.getElementById('addressProvince').value,
+                        zip: document.getElementById('addressZip').value,
+                        phone: document.getElementById('addressPhone').value
+                    };
+                    
+                    localStorage.setItem('juliasCraft_users', JSON.stringify(users));
+                    currentUser = users[userIndex];
+                    sessionStorage.setItem('juliasCraft_user', JSON.stringify(currentUser));
+                    
+                    loadAddresses();
+                    hideAddressForm();
+                    showSuccessMessage();
+                }
+            };
+        }
+
+        // Delete Address
+        function deleteAddress(index) {
+            if (confirm('Delete this address?')) {
+                const users = JSON.parse(localStorage.getItem('juliasCraft_users') || '[]');
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                
+                if (userIndex !== -1) {
+                    users[userIndex].addresses.splice(index, 1);
+                    localStorage.setItem('juliasCraft_users', JSON.stringify(users));
+                    
+                    currentUser = users[userIndex];
+                    sessionStorage.setItem('juliasCraft_user', JSON.stringify(currentUser));
+                    
+                    loadAddresses();
+                    showSuccessMessage();
+                }
+            }
+        }
+
+        // Change Password
+        document.getElementById('securityForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                alert('New password must be at least 6 characters');
+                return;
+            }
+            
+            // Verify current password
+            const users = JSON.parse(localStorage.getItem('juliasCraft_users') || '[]');
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            
+            if (userIndex !== -1) {
+                if (users[userIndex].password !== currentPassword) {
+                    alert('Current password is incorrect');
+                    return;
+                }
+                
+                // Update password
+                users[userIndex].password = newPassword;
+                localStorage.setItem('juliasCraft_users', JSON.stringify(users));
+                
+                // Update session
+                currentUser.password = newPassword;
+                sessionStorage.setItem('juliasCraft_user', JSON.stringify(currentUser));
+                
+                alert('Password changed successfully!');
+                document.getElementById('securityForm').reset();
+            }
+        });
+
+        // Logout
+        function logout() {
+            sessionStorage.removeItem('juliasCraft_user');
+            window.location.href = 'index.html';
+        }
+
+        // Delete Account
+        function deleteAccount() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                const users = JSON.parse(localStorage.getItem('juliasCraft_users') || '[]');
+                const updatedUsers = users.filter(u => u.id !== currentUser.id);
+                
+                localStorage.setItem('juliasCraft_users', JSON.stringify(updatedUsers));
+                sessionStorage.removeItem('juliasCraft_user');
+                
+                alert('Account deleted successfully');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Show Success Message
+        function showSuccessMessage() {
+            const message = document.getElementById('successMessage');
+            message.style.display = 'block';
+            
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 3000);
+        }
+
+        // Update Cart Count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+            const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+            updateCartCount();
+        });
+    </script>
+</body>
+</html>

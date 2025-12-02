@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Julia's Craft - Handmade Flowers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff9fb;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #ff6b8b 0%, #ff8e9e 100%);
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 15px rgba(255, 107, 139, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+        }
+        .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Brush Script MT', cursive;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        #cartCount {
+            background: white;
+            color: #ff6b8b;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('flower/hero.jpg');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            padding: 120px 20px;
+            color: white;
+        }
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+        .btn {
+            display: inline-block;
+            background: #ff6b8b;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #ff4b7b;
+            transform: translateY(-2px);
+        }
+        .btn-track {
+            background: #4CAF50;
+            margin-left: 15px;
+        }
+        .featured {
+            padding: 60px 5%;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            color: #ff6b8b;
+            margin-bottom: 40px;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+        }
+        .product-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background-color: #f5f5f5;
+        }
+        .product-info {
+            padding: 20px;
+        }
+        .product-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .product-price {
+            color: #ff6b8b;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .story {
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe6ee 100%);
+            padding: 80px 5%;
+            margin: 60px 0;
+            border-radius: 20px;
+            margin-left: 5%;
+            margin-right: 5%;
+        }
+        .story-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 18px;
+            line-height: 1.8;
+            color: #666;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .story-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 30px auto 20px;
+            display: block;
+            border: 5px solid #ff6b8b;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        footer {
+            background: #ff6b8b;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+        }
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .hero h1 {
+                font-size: 36px;
+            }
+            .product-card {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo-container">
+            <img src="flower/logo.jpg" alt="Julia's Craft Logo" class="logo-img" id="storeLogo">
+            <div class="logo-text">Julia's Craft 🌸</div>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop Flowers</a>
+            <a href="about.html">Our Story</a>
+            <a href="contact.html">Contact</a>
+            <a href="track-order.html" class="btn-track">📦 Track Order</a>
+            <a href="login.html" id="loginBtn">Login</a>
+            <a href="cart.html">🛒 Cart <span id="cartCount">0</span></a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Beautiful Handmade Flowers</h1>
+        <p>Made with love since September 2025</p>
+        <a href="shop.html" class="btn">Shop Now</a>
+        <a href="track-order.html" class="btn btn-track">Track My Order</a>
+    </section>
+
+    <!-- Featured Flowers - NOW WITH HARDCODED IMAGES -->
+    <section class="featured">
+        <h2 class="section-title">Our Featured Flowers</h2>
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card">
+                <img src="flower/bouquet.jpg" alt="Eternal Romance Bouquet" class="product-img">
+                <div class="product-info">
+                    <div class="product-name">Eternal Romance Bouquet</div>
+                    <div class="product-price">₱1,500</div>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">12 Red roses with baby's breath - perfect for anniversaries</p>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="product.html?id=1" class="btn" style="flex: 1; padding: 8px 15px; font-size: 14px;">View Details</a>
+                        <button onclick="addToCart(1)" class="btn" style="flex: 1; padding: 8px 15px; font-size: 14px;">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 2 -->
+            <div class="product-card">
+                <img src="flower/jj.jpg" alt="Sunshine Basket" class="product-img">
+                <div class="product-info">
+                    <div class="product-name">Sunshine Basket</div>
+                    <div class="product-price">₱1,200</div>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Sunflowers and daisies in a beautiful wicker basket</p>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="product.html?id=2" class="btn" style="flex: 1; padding: 8px 15px; font-size: 14px;">View Details</a>
+                        <button onclick="addToCart(2)" class="btn" style="flex: 1; padding: 8px 15px; font-size: 14px;">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 3 -->
+            <div class="product-card">
+                <img src="flower/21 pcs.jpg" alt="Purple Dream Arrangement" class="product-img">
+                <div class="product-info">
+                    <div class="product-name">Purple Dream Arrangement</div>
+                    <div class="product-price">₱1,800</div>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Lavender, lilac, and purple orchids in ceramic vase</p>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="product.html?id=3" class="btn" style="flex: 1; padding: 8px 15px; font-size: 14px;">View Details</a>
+                        <button onclick="addToCart(3)" class="btn" style="flex: 1; padding: 8px 15px; font-size: 14px;">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 4 -->
+            <div class="product-card">
+                <img src="flower/200.jpg" alt="Classic White Elegance" class="product-img">
+                <div class="product-info">
+                    <div class="product-name">Classic White Elegance</div>
+                    <div class="product-price">₱2,000</div>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 15px;">White roses, orchids, and calla lilies</p>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="product.html?id=4" class="btn" style="flex: 1; padding: 8px 15px; font-size: 14px;">View Details</a>
+                        <button onclick="addToCart(4)" class="btn" style="flex: 1; padding: 8px 15px; font-size: 14px;">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="flower/all.jpg" class="btn">View All 9 Flowers</a>
+        </div>
+    </section>
+
+    <!-- Our Story -->
+    <section class="story">
+        <h2 class="section-title">Our Story</h2>
+        <div class="story-content">
+            <p>"I started in September 2025 making flowers for my special someone. 
+            When people saw them, they asked why I don't try making and selling 
+            them since they're really beautiful. At first, I was hesitant, but 
+            I eventually tried, and until now, people are buying..."</p>
+            <p style="margin-top: 20px; font-style: italic;">- Julia 🌸</p>
+            <img src="flower/all.jpg" alt="Julia - Owner" class="story-image" id="ownerImage">
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2024 Julia's Craft - All flowers handmade with love</p>
+        <p>Contact: julias.craft@email.com | 09123456789</p>
+    </footer>
+
+    <script>
+        // Initialize Data with ALL 9 Flowers
+        function initializeData() {
+            if (!localStorage.getItem('juliasCraft_initialized')) {
+                // ALL 9 FLOWERS COMPLETE
+                const products = [
+                    {
+                        id: 1,
+                        name: "Eternal Romance Bouquet",
+                        price: 1500,
+                        category: "bouquet",
+                        description: "12 Red roses with baby's breath - perfect for anniversaries",
+                        story: "My first creation that started it all, inspired by eternal love",
+                        image: "flower/bouquet.jpg",
+                        stock: 15,
+                        available: true
+                    },
+                    {
+                        id: 2,
+                        name: "Sunshine Basket",
+                        price: 1200,
+                        category: "arrangement",
+                        description: "Sunflowers and daisies in a beautiful wicker basket",
+                        story: "Created to bring sunshine to someone's day",
+                        image: "flower/jj.jpg",
+                        stock: 10,
+                        available: true
+                    },
+                    {
+                        id: 3,
+                        name: "Purple Dream Arrangement",
+                        price: 1800,
+                        category: "arrangement",
+                        description: "Lavender, lilac, and purple orchids in ceramic vase",
+                        story: "For dreamy romantic moments",
+                        image: "flower/21 pcs.jpg",
+                        stock: 8,
+                        available: true
+                    },
+                    {
+                        id: 4,
+                        name: "Classic White Elegance",
+                        price: 2000,
+                        category: "bouquet",
+                        description: "White roses, orchids, and calla lilies",
+                        story: "Elegance and purity in every petal",
+                        image: "flower/200.jpg",
+                        stock: 12,
+                        available: true
+                    },
+                    {
+                        id: 5,
+                        name: "Sweet Serenade",
+                        price: 1300,
+                        category: "bouquet",
+                        description: "Pink carnations, roses, and baby's breath",
+                        story: "A sweet melody of pink perfection",
+                        image: "flower/180.jpg",
+                        stock: 20,
+                        available: true
+                    },
+                    {
+                        id: 6,
+                        name: "Tropical Bliss",
+                        price: 1600,
+                        category: "special",
+                        description: "Birds of paradise, orchids, and tropical greens",
+                        story: "Bringing tropical vibes to your space",
+                        image: "flower/6 pcs.jpg",
+                        stock: 7,
+                        available: true
+                    },
+                    {
+                        id: 7,
+                        name: "Minimalist Charm",
+                        price: 1000,
+                        category: "special",
+                        description: "Single stem roses in minimalist glass vase",
+                        story: "Sometimes less is more",
+                        image: "flower/pink.jpg",
+                        stock: 25,
+                        available: true
+                    },
+                    {
+                        id: 8,
+                        name: "Birthday Delight",
+                        price: 1700,
+                        category: "special",
+                        description: "Mixed bright flowers with birthday decorations",
+                        story: "Made to celebrate special days",
+                        image: "flower/white.jpg",
+                        stock: 18,
+                        available: true
+                    },
+                    {
+                        id: 9,
+                        name: "Get Well Soon Basket",
+                        price: 1400,
+                        category: "bouquet",
+                        description: "Cheerful yellow and white flowers with get well card",
+                        story: "To brighten someone's recovery",
+                        image: "flower/blue.jpg",
+                        stock: 14,
+                        available: true
+                    }
+                ];
+                
+                localStorage.setItem('juliasCraft_products', JSON.stringify(products));
+                localStorage.setItem('juliasCraft_users', JSON.stringify([]));
+                localStorage.setItem('juliasCraft_orders', JSON.stringify([]));
+                localStorage.setItem('juliasCraft_initialized', 'true');
+                
+                // Add default seller account (Login only, NO registration)
+                const defaultSeller = {
+                    id: 1,
+                    name: "Julia",
+                    email: "julia@seller.com",
+                    password: "seller123",
+                    role: "seller",
+                    contact: "09123456789",
+                    address: "123 Flower Street, Quezon City",
+                    joined: new Date().toISOString()
+                };
+                
+                const users = JSON.parse(localStorage.getItem('juliasCraft_users') || '[]');
+                users.push(defaultSeller);
+                localStorage.setItem('juliasCraft_users', JSON.stringify(users));
+            }
+        }
+
+        // Add to Cart
+        function addToCart(productId) {
+            const products = JSON.parse(localStorage.getItem('juliasCraft_products') || '[]');
+            const product = products.find(p => p.id === productId);
+            
+            if (!product || product.stock <= 0) {
+                alert('Product is out of stock!');
+                return;
+            }
+            
+            let cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: 1,
+                    image: product.image
+                });
+            }
+            
+            localStorage.setItem('juliasCraft_cart', JSON.stringify(cart));
+            updateCartCount();
+            
+            // Show nice popup message
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4CAF50;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                z-index: 9999;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            `;
+            popup.innerHTML = `✅ Added to cart: ${product.name}`;
+            document.body.appendChild(popup);
+            
+            setTimeout(() => {
+                popup.remove();
+            }, 3000);
+        }
+
+        // Update Cart Count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+            const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        // Check Login Status
+        function checkLoginStatus() {
+            const user = JSON.parse(sessionStorage.getItem('juliasCraft_user') || 'null');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (user) {
+                loginBtn.textContent = `👋 ${user.name}`;
+                loginBtn.href = user.role === 'seller' ? "seller-dashboard.html" : "profile.html";
+                
+                // Add logout button
+                const logoutBtn = document.createElement('a');
+                logoutBtn.href = "#";
+                logoutBtn.textContent = "Logout";
+                logoutBtn.style.marginLeft = "10px";
+                logoutBtn.style.color = "white";
+                logoutBtn.style.textDecoration = "none";
+                logoutBtn.onclick = function() {
+                    sessionStorage.removeItem('juliasCraft_user');
+                    window.location.href = 'index.html';
+                };
+                loginBtn.parentNode.appendChild(logoutBtn);
+                
+                // Add seller dashboard link if seller
+                if (user.role === 'seller') {
+                    const sellerLink = document.createElement('a');
+                    sellerLink.href = "seller-dashboard.html";
+                    sellerLink.textContent = "Seller Dashboard";
+                    sellerLink.style.marginRight = "15px";
+                    sellerLink.style.color = "white";
+                    sellerLink.style.textDecoration = "none";
+                    loginBtn.parentNode.insertBefore(sellerLink, loginBtn);
+                }
+            }
+        }
+
+        // Load Images with Error Handling
+        function loadImages() {
+            // Check logo
+            const logoImg = document.getElementById('storeLogo');
+            logoImg.onerror = function() {
+                this.style.backgroundColor = "#ff6b8b";
+                this.style.display = "flex";
+                this.style.alignItems = "center";
+                this.style.justifyContent = "center";
+                this.style.color = "white";
+                this.style.fontSize = "12px";
+                this.innerHTML = "JC";
+            };
+            
+            // Check owner image
+            const ownerImg = document.getElementById('ownerImage');
+            if (ownerImg) {
+                ownerImg.onerror = function() {
+                    this.style.backgroundColor = "#ff6b8b";
+                    this.style.display = "flex";
+                    this.style.alignItems = "center";
+                    this.style.justifyContent = "center";
+                    this.style.color = "white";
+                    this.innerHTML = "Julia";
+                };
+            }
+            
+            // Check all product images
+            const productImages = document.querySelectorAll('.product-img');
+            productImages.forEach(img => {
+                img.onerror = function() {
+                    this.style.backgroundColor = "#f5f5f5";
+                    this.style.display = "flex";
+                    this.style.alignItems = "center";
+                    this.style.justifyContent = "center";
+                    this.style.color = "#ccc";
+                    this.innerHTML = "Image<br>Not Found";
+                    this.style.fontSize = "14px";
+                    this.style.textAlign = "center";
+                };
+            });
+            
+            // Check hero background
+            const heroSection = document.querySelector('.hero');
+            const heroImage = new Image();
+            heroImage.src = 'flower/hero.jpg';
+            heroImage.onerror = function() {
+                heroSection.style.backgroundImage = "linear-gradient(135deg, #ff6b8b 0%, #ff8e9e 100%)";
+            };
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeData();
+            updateCartCount();
+            checkLoginStatus();
+            loadImages();
+        });
+    </script>
+</body>
+</html>

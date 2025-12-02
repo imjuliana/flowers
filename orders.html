@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details - Julia's Craft</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff9fb;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #ff6b8b 0%, #ff8e9e 100%);
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Brush Script MT', cursive;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        #cartCount {
+            background: white;
+            color: #ff6b8b;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        .order-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .confirmation-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .confirmation-icon {
+            font-size: 80px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        .order-details {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .order-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .info-card {
+            background: #f8f8f8;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .info-label {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        .info-value {
+            font-weight: 500;
+            color: #333;
+            font-size: 18px;
+        }
+        .order-items {
+            margin-top: 30px;
+        }
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        .item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+        .item-details {
+            flex: 1;
+        }
+        .item-quantity {
+            color: #666;
+            font-size: 14px;
+        }
+        .item-price {
+            font-weight: bold;
+            color: #333;
+        }
+        .tracking-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .tracking-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            position: relative;
+        }
+        .tracking-steps::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #eee;
+            z-index: 1;
+        }
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            background: #eee;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 20px;
+        }
+        .step.active .step-icon {
+            background: #ff6b8b;
+            color: white;
+        }
+        .step.completed .step-icon {
+            background: #4CAF50;
+            color: white;
+        }
+        .step-date {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        .btn {
+            display: inline-block;
+            background: #ff6b8b;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+        .btn:hover {
+            background: #ff4b7b;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #666;
+        }
+        footer {
+            background: #ff6b8b;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+        }
+        .help-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 30px;
+        }
+        .not-found {
+            text-align: center;
+            padding: 100px 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">Julia's Craft 🌸</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop Flowers</a>
+            <a href="about.html">Our Story</a>
+            <a href="contact.html">Contact</a>
+            <a href="login.html" id="loginBtn">Login</a>
+            <a href="cart.html">🛒 Cart <span id="cartCount">0</span></a>
+        </div>
+    </nav>
+
+    <!-- Order Container -->
+    <div class="order-container" id="orderContainer">
+        <!-- Content will be loaded by JavaScript -->
+    </div>
+
+    <footer>
+        <p>© 2024 Julia's Craft - All flowers handmade with love</p>
+        <p>Contact: julias.craft@email.com | 09123456789</p>
+    </footer>
+
+    <script>
+        let currentOrder = null;
+        
+        // Get order ID from URL
+        function getOrderIdFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return parseInt(urlParams.get('order'));
+        }
+
+        // Load Order Details
+        function loadOrderDetails() {
+            const orderId = getOrderIdFromURL();
+            const orders = JSON.parse(localStorage.getItem('juliasCraft_orders') || '[]');
+            currentOrder = orders.find(o => o.id === orderId);
+            
+            const container = document.getElementById('orderContainer');
+            
+            if (!currentOrder) {
+                container.innerHTML = `
+                    <div class="not-found">
+                        <div style="font-size: 80px; margin-bottom: 20px;">❌</div>
+                        <h2 style="color: #ff6b8b; margin-bottom: 20px;">Order Not Found</h2>
+                        <p>The order you're looking for doesn't exist or you don't have permission to view it.</p>
+                        <a href="profile.html" class="btn" style="margin-top: 20px;">View My Orders</a>
+                        <a href="shop.html" class="btn btn-secondary" style="margin-top: 20px;">Continue Shopping</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Check if user is authorized to view this order
+            const user = JSON.parse(sessionStorage.getItem('juliasCraft_user') || 'null');
+            if (user && user.role !== 'seller' && user.id !== currentOrder.customerId) {
+                container.innerHTML = `
+                    <div class="not-found">
+                        <h2 style="color: #ff6b8b; margin-bottom: 20px;">Access Denied</h2>
+                        <p>You don't have permission to view this order.</p>
+                        <a href="profile.html" class="btn" style="margin-top: 20px;">View My Orders</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Render order details
+            renderOrderDetails();
+        }
+
+        // Render Order Details
+        function renderOrderDetails() {
+            const container = document.getElementById('orderContainer');
+            const isSeller = currentUser && currentUser.role === 'seller';
+            
+            let html = `
+                <!-- Confirmation Header -->
+                <div class="confirmation-header">
+                    <div class="confirmation-icon">✅</div>
+                    <h1 style="color: #ff6b8b; margin-bottom: 10px;">Order Confirmed!</h1>
+                    <p style="font-size: 18px; color: #666; margin-bottom: 20px;">
+                        Thank you for your order! We'll notify you once it's on its way.
+                    </p>
+                    <div style="font-size: 24px; font-weight: bold; color: #333;">
+                        Order #${currentOrder.id}
+                    </div>
+                </div>
+
+                <!-- Order Details -->
+                <div class="order-details">
+                    <h2 style="color: #ff6b8b; margin-bottom: 30px;">Order Details</h2>
+                    
+                    <div class="order-info">
+                        <div class="info-card">
+                            <div class="info-label">Order Date</div>
+                            <div class="info-value">${new Date(currentOrder.orderDate).toLocaleDateString()}</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-label">Order Status</div>
+                            <div class="info-value" style="color: ${getStatusColor(currentOrder.status)};">
+                                ${currentOrder.status}
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-label">Payment Method</div>
+                            <div class="info-value">${currentOrder.paymentMethod}</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-label">Total Amount</div>
+                            <div class="info-value">₱${currentOrder.totalAmount.toLocaleString()}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Customer Information -->
+                    <h3 style="color: #333; margin-bottom: 15px;">Customer Information</h3>
+                    <div class="order-info">
+                        <div class="info-card">
+                            <div class="info-label">Customer Name</div>
+                            <div class="info-value">${currentOrder.customerName}</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">${currentOrder.customerEmail}</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-label">Phone</div>
+                            <div class="info-value">${currentOrder.customerPhone}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Delivery Address -->
+                    <h3 style="color: #333; margin-bottom: 15px; margin-top: 30px;">Delivery Address</h3>
+                    <div class="info-card">
+                        <div class="info-value">
+                            ${currentOrder.deliveryAddress.address}<br>
+                            ${currentOrder.deliveryAddress.city}, ${currentOrder.deliveryAddress.province}<br>
+                            ${currentOrder.deliveryAddress.zipCode}
+                        </div>
+                    </div>
+                    
+                    <!-- Order Items -->
+                    <div class="order-items">
+                        <h3 style="color: #333; margin-bottom: 20px;">Order Items</h3>
+                        ${currentOrder.items.map(item => `
+                            <div class="order-item">
+                                <img src="${item.image}" alt="${item.name}" class="item-image">
+                                <div class="item-details">
+                                    <div style="font-weight: bold; margin-bottom: 5px;">${item.name}</div>
+                                    <div class="item-quantity">Quantity: ${item.quantity}</div>
+                                </div>
+                                <div class="item-price">₱${(item.price * item.quantity).toLocaleString()}</div>
+                            </div>
+                        `).join('')}
+                        
+                        <!-- Order Summary -->
+                        <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Subtotal:</span>
+                                <span>₱${(currentOrder.totalAmount - 100).toLocaleString()}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span>Delivery Fee:</span>
+                                <span>₱100.00</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 20px; font-weight: bold; color: #ff6b8b;">
+                                <span>Total:</span>
+                                <span>₱${currentOrder.totalAmount.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Tracking -->
+                <div class="tracking-section">
+                    <h2 style="color: #ff6b8b; margin-bottom: 30px;">Order Tracking</h2>
+                    <div class="tracking-steps">
+                        ${renderTrackingSteps()}
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div style="text-align: center; margin: 40px 0;">
+                    ${isSeller ? `
+                        <button class="btn" onclick="updateOrderStatus()">Update Status</button>
+                        <button class="btn btn-secondary" onclick="window.print()">Print Order</button>
+                    ` : `
+                        <a href="profile.html" class="btn">View All Orders</a>
+                        <a href="shop.html" class="btn btn-secondary">Continue Shopping</a>
+                        <button class="btn btn-secondary" onclick="window.print()">Print Order</button>
+                    `}
+                </div>
+
+                <!-- Help Section -->
+                <div class="help-section">
+                    <h3 style="color: #ff6b8b; margin-bottom: 20px;">Need Help?</h3>
+                    <p>If you have any questions about your order, please contact us:</p>
+                    <div style="margin-top: 20px;">
+                        <p>📞 Phone: 0917-123-4567</p>
+                        <p>✉️ Email: julias.craft@gmail.com</p>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // Get Status Color
+        function getStatusColor(status) {
+            switch(status) {
+                case 'Pending': return '#ff9800';
+                case 'Preparing': return '#2196f3';
+                case 'Ready': return '#4caf50';
+                case 'Delivered': return '#8bc34a';
+                default: return '#666';
+            }
+        }
+
+        // Render Tracking Steps
+        function renderTrackingSteps() {
+            const steps = [
+                { id: 'pending', label: 'Order Placed', icon: '📝' },
+                { id: 'preparing', label: 'Preparing', icon: '🌸' },
+                { id: 'ready', label: 'Ready', icon: '✅' },
+                { id: 'delivered', label: 'Delivered', icon: '🚚' }
+            ];
+            
+            let html = '';
+            let foundCurrent = false;
+            
+            steps.forEach(step => {
+                let stepClass = '';
+                let date = '';
+                
+                if (currentOrder.status.toLowerCase() === step.id) {
+                    stepClass = 'active';
+                    foundCurrent = true;
+                    date = currentOrder.orderDate ? new Date(currentOrder.orderDate).toLocaleDateString() : '';
+                } else if (foundCurrent) {
+                    stepClass = '';
+                } else {
+                    stepClass = 'completed';
+                    date = currentOrder.orderDate ? new Date(currentOrder.orderDate).toLocaleDateString() : '';
+                }
+                
+                html += `
+                    <div class="step ${stepClass}">
+                        <div class="step-icon">${step.icon}</div>
+                        <div>${step.label}</div>
+                        ${date ? `<div class="step-date">${date}</div>` : ''}
+                    </div>
+                `;
+            });
+            
+            return html;
+        }
+
+        // Update Order Status (for sellers)
+        function updateOrderStatus() {
+            if (!currentUser || currentUser.role !== 'seller') return;
+            
+            const newStatus = prompt('Enter new status (Pending, Preparing, Ready, Delivered):', currentOrder.status);
+            
+            if (newStatus && ['Pending', 'Preparing', 'Ready', 'Delivered'].includes(newStatus)) {
+                const orders = JSON.parse(localStorage.getItem('juliasCraft_orders') || '[]');
+                const orderIndex = orders.findIndex(o => o.id === currentOrder.id);
+                
+                if (orderIndex !== -1) {
+                    orders[orderIndex].status = newStatus;
+                    if (newStatus === 'Delivered') {
+                        orders[orderIndex].deliveryDate = new Date().toISOString();
+                    }
+                    localStorage.setItem('juliasCraft_orders', JSON.stringify(orders));
+                    
+                    // Reload order details
+                    currentOrder = orders[orderIndex];
+                    renderOrderDetails();
+                }
+            }
+        }
+
+        // Update Cart Count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+            const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        // Check Login Status
+        function checkLoginStatus() {
+            currentUser = JSON.parse(sessionStorage.getItem('juliasCraft_user') || 'null');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (currentUser) {
+                loginBtn.textContent = `👋 ${currentUser.name}`;
+                loginBtn.href = "profile.html";
+                
+                const logoutBtn = document.createElement('a');
+                logoutBtn.href = "#";
+                logoutBtn.textContent = "Logout";
+                logoutBtn.style.marginLeft = "10px";
+                logoutBtn.style.color = "white";
+                logoutBtn.style.textDecoration = "none";
+                logoutBtn.onclick = function() {
+                    sessionStorage.removeItem('juliasCraft_user');
+                    window.location.href = 'index.html';
+                };
+                loginBtn.parentNode.appendChild(logoutBtn);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrderDetails();
+            updateCartCount();
+            checkLoginStatus();
+        });
+    </script>
+</body>
+</html>

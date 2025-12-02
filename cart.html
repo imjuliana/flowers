@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Julia's Craft</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff9fb;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #ff6b8b 0%, #ff8e9e 100%);
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Brush Script MT', cursive;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        #cartCount {
+            background: white;
+            color: #ff6b8b;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        .cart-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .cart-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .cart-header h1 {
+            font-size: 36px;
+            color: #ff6b8b;
+        }
+        .cart-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+        @media (max-width: 768px) {
+            .cart-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        .cart-items {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .cart-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            gap: 20px;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .item-image img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .item-details h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .item-price {
+            color: #ff6b8b;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .quantity {
+            font-size: 18px;
+            font-weight: bold;
+            min-width: 30px;
+            text-align: center;
+        }
+        .remove-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .cart-summary {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .summary-row.total {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b8b;
+            border-bottom: none;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #ff6b8b;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background: #ff4b7b;
+            transform: translateY(-2px);
+        }
+        .btn.continue {
+            background: #666;
+        }
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .empty-cart h2 {
+            color: #ff6b8b;
+            margin-bottom: 20px;
+        }
+        footer {
+            background: #ff6b8b;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">Julia's Craft 🌸</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop Flowers</a>
+            <a href="about.html">Our Story</a>
+            <a href="contact.html">Contact</a>
+            <a href="login.html" id="loginBtn">Login</a>
+            <a href="cart.html">🛒 Cart <span id="cartCount">0</span></a>
+        </div>
+    </nav>
+
+    <!-- Cart Container -->
+    <div class="cart-container">
+        <div class="cart-header">
+            <h1>Your Shopping Cart</h1>
+            <p>Review your items before checkout</p>
+        </div>
+
+        <div class="cart-content">
+            <!-- Cart Items -->
+            <div class="cart-items" id="cartItems">
+                <!-- Items will load here -->
+            </div>
+
+            <!-- Order Summary -->
+            <div class="cart-summary">
+                <h2 style="margin-bottom: 20px; color: #333;">Order Summary</h2>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="subtotal">₱0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery Fee</span>
+                    <span id="deliveryFee">₱100.00</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="totalAmount">₱0.00</span>
+                </div>
+                
+                <a href="checkout.html" class="btn" id="checkoutBtn">Proceed to Checkout</a>
+                <a href="shop.html" class="btn continue">Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Julia's Craft - All flowers handmade with love</p>
+        <p>Contact: julias.craft@email.com | 09123456789</p>
+    </footer>
+
+    <script>
+        // Load Cart Items
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+            const container = document.getElementById('cartItems');
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <h2>Your cart is empty</h2>
+                        <p>Looks like you haven't added any flowers yet.</p>
+                        <a href="shop.html" class="btn" style="display: inline-block; width: auto;">Browse Flowers</a>
+                    </div>
+                `;
+                document.getElementById('checkoutBtn').style.display = 'none';
+                updateCartCount();
+                calculateTotal();
+                return;
+            }
+            
+            let itemsHtml = '';
+            cart.forEach(item => {
+                itemsHtml += `
+                    <div class="cart-item" data-id="${item.id}">
+                        <div class="item-image">
+                            <img src="${item.image}" alt="${item.name}">
+                        </div>
+                        <div class="item-details">
+                            <h3>${item.name}</h3>
+                            <div class="item-price">₱${item.price.toLocaleString()}</div>
+                        </div>
+                        <div class="quantity-control">
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        </div>
+                        <button class="remove-btn" onclick="removeItem(${item.id})">Remove</button>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = itemsHtml;
+            updateCartCount();
+            calculateTotal();
+        }
+
+        // Update Quantity
+        function updateQuantity(productId, change) {
+            let cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+            const itemIndex = cart.findIndex(item => item.id === productId);
+            
+            if (itemIndex !== -1) {
+                cart[itemIndex].quantity += change;
+                
+                if (cart[itemIndex].quantity <= 0) {
+                    cart.splice(itemIndex, 1);
+                }
+                
+                localStorage.setItem('juliasCraft_cart', JSON.stringify(cart));
+                loadCart();
+            }
+        }
+
+        // Remove Item
+        function removeItem(productId) {
+            if (confirm('Remove this item from cart?')) {
+                let cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+                cart = cart.filter(item => item.id !== productId);
+                localStorage.setItem('juliasCraft_cart', JSON.stringify(cart));
+                loadCart();
+            }
+        }
+
+        // Calculate Total
+        function calculateTotal() {
+            const cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const deliveryFee = 100;
+            const total = subtotal + deliveryFee;
+            
+            document.getElementById('subtotal').textContent = '₱' + subtotal.toLocaleString();
+            document.getElementById('deliveryFee').textContent = '₱' + deliveryFee.toLocaleString();
+            document.getElementById('totalAmount').textContent = '₱' + total.toLocaleString();
+        }
+
+        // Update Cart Count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+            const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        // Check Login Status
+        function checkLoginStatus() {
+            const user = JSON.parse(sessionStorage.getItem('juliasCraft_user') || 'null');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (user) {
+                loginBtn.textContent = `👋 ${user.name}`;
+                loginBtn.href = "profile.html";
+                
+                const logoutBtn = document.createElement('a');
+                logoutBtn.href = "#";
+                logoutBtn.textContent = "Logout";
+                logoutBtn.style.marginLeft = "10px";
+                logoutBtn.style.color = "white";
+                logoutBtn.style.textDecoration = "none";
+                logoutBtn.onclick = function() {
+                    sessionStorage.removeItem('juliasCraft_user');
+                    window.location.href = 'index.html';
+                };
+                loginBtn.parentNode.appendChild(logoutBtn);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCart();
+            checkLoginStatus();
+            
+            // Check if user is logged in for checkout
+            document.getElementById('checkoutBtn').addEventListener('click', function(e) {
+                const user = JSON.parse(sessionStorage.getItem('juliasCraft_user') || 'null');
+                const cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+                
+                if (cart.length === 0) {
+                    e.preventDefault();
+                    alert('Your cart is empty!');
+                    return;
+                }
+                
+                if (!user) {
+                    e.preventDefault();
+                    if (confirm('You need to login to checkout. Go to login page?')) {
+                        window.location.href = 'login.html';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

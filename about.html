@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story - Julia's Craft</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff9fb;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #ff6b8b 0%, #ff8e9e 100%);
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Brush Script MT', cursive;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        #cartCount {
+            background: white;
+            color: #ff6b8b;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        .about-hero {
+            background: linear-gradient(rgba(255, 245, 248, 0.9), rgba(255, 245, 248, 0.9)), url('https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            padding: 100px 20px;
+            color: #333;
+        }
+        .about-hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #ff6b8b;
+        }
+        .story-section {
+            padding: 80px 5%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .story-timeline {
+            position: relative;
+            margin: 40px 0;
+        }
+        .timeline-item {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            position: relative;
+            border-left: 5px solid #ff6b8b;
+        }
+        .timeline-date {
+            color: #ff6b8b;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .story-content {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin: 40px 0;
+            line-height: 1.8;
+            font-size: 18px;
+        }
+        .story-content p {
+            margin-bottom: 20px;
+        }
+        .quote {
+            font-style: italic;
+            color: #ff6b8b;
+            font-size: 24px;
+            text-align: center;
+            margin: 40px 0;
+            padding: 30px;
+            border-left: 5px solid #ff6b8b;
+            background: #fff5f8;
+        }
+        .values {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+        .value-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .value-card:hover {
+            transform: translateY(-10px);
+        }
+        .value-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #ff6b8b;
+        }
+        footer {
+            background: #ff6b8b;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+        }
+        .btn {
+            display: inline-block;
+            background: #ff6b8b;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #ff4b7b;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .story-content {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">Julia's Craft 🌸</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop Flowers</a>
+            <a href="about.html">Our Story</a>
+            <a href="contact.html">Contact</a>
+            <a href="login.html" id="loginBtn">Login</a>
+            <a href="cart.html">🛒 Cart <span id="cartCount">0</span></a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="about-hero">
+        <h1>Our Journey</h1>
+        <p>From a simple gift to a blossoming business</p>
+    </section>
+
+    <!-- Story Section -->
+    <section class="story-section">
+        <div class="quote">
+            "I started in September 2025 making flowers for my special someone..."
+        </div>
+
+        <div class="story-content">
+            <h2 style="color: #ff6b8b; margin-bottom: 30px; text-align: center;">The Beginning</h2>
+            <p>
+                It all started in September 2025 when I wanted to create something special for someone dear to me. 
+                I spent days learning, experimenting, and putting my heart into making the perfect handmade flowers. 
+                What began as a simple expression of affection turned out to be the seed of something beautiful.
+            </p>
+            
+            <h2 style="color: #ff6b8b; margin: 40px 0 20px;">The Turning Point</h2>
+            <p>
+                When friends and family saw what I made, they were amazed. "Why don't you try selling these?" 
+                they asked. "They're really beautiful!" At first, I hesitated. I was unsure if people would 
+                appreciate handmade flowers in a world of everything mass-produced.
+            </p>
+            
+            <p>
+                But their encouragement stayed with me. After much thought, I decided to take that leap of faith. 
+                I created a few pieces and shared them online. To my surprise, people started ordering! 
+                That moment changed everything.
+            </p>
+            
+            <h2 style="color: #ff6b8b; margin: 40px 0 20px;">The Growth</h2>
+            <p>
+                From those first few orders, Julia's Craft began to grow. Each flower I make carries a piece of 
+                that original love and care. I've expanded from simple bouquets to various arrangements, 
+                each telling its own story.
+            </p>
+            
+            <p>
+                Today, I continue to create with the same passion that started it all. Every order is special 
+                to me because I know it's not just about flowers—it's about connecting people, celebrating moments, 
+                and spreading beauty.
+            </p>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <p style="font-size: 20px; font-weight: bold; color: #ff6b8b;">- Julia 🌸</p>
+                <p>Founder, Julia's Craft</p>
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="story-timeline">
+            <h2 style="text-align: center; color: #ff6b8b; margin-bottom: 40px;">Our Journey Timeline</h2>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">September 2025</div>
+                <h3>The First Creation</h3>
+                <p>Made the very first handmade flower bouquet for a special someone. This single act of love started everything.</p>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">October 2025</div>
+                <h3>First Orders</h3>
+                <p>Friends and family placed the first orders after seeing the beautiful creations. The journey as a business began.</p>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">November 2025</div>
+                <h3>Online Presence</h3>
+                <p>Started sharing creations on social media. Received overwhelming positive response from the community.</p>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">December 2025</div>
+                <h3>Holiday Success</h3>
+                <p>First holiday season! Created special Christmas arrangements that sold out quickly.</p>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">Present</div>
+                <h3>Growing Beautifully</h3>
+                <p>Continuing to create with love, expanding product range, and bringing smiles to more people with every order.</p>
+            </div>
+        </div>
+
+        <!-- Our Values -->
+        <div class="values">
+            <div class="value-card">
+                <div class="value-icon">💝</div>
+                <h3>Made with Love</h3>
+                <p>Every flower is handmade with care and attention to detail.</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">🌸</div>
+                <h3>Quality Materials</h3>
+                <p>Using only the best materials to ensure lasting beauty.</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">✨</div>
+                <h3>Unique Designs</h3>
+                <p>Each creation is special and can be customized.</p>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">🤝</div>
+                <h3>Personal Touch</h3>
+                <p>Working closely with customers to create perfect arrangements.</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 60px;">
+            <a href="shop.html" class="btn">Shop Our Flowers</a>
+            <a href="contact.html" class="btn" style="background: #666; margin-left: 20px;">Contact Us</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2024 Julia's Craft - All flowers handmade with love</p>
+        <p>Contact: julias.craft@email.com | 09123456789</p>
+    </footer>
+
+    <script>
+        // Update Cart Count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+            const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        // Check Login Status
+        function checkLoginStatus() {
+            const user = JSON.parse(sessionStorage.getItem('juliasCraft_user') || 'null');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (user) {
+                loginBtn.textContent = `👋 ${user.name}`;
+                loginBtn.href = "profile.html";
+                
+                const logoutBtn = document.createElement('a');
+                logoutBtn.href = "#";
+                logoutBtn.textContent = "Logout";
+                logoutBtn.style.marginLeft = "10px";
+                logoutBtn.style.color = "white";
+                logoutBtn.style.textDecoration = "none";
+                logoutBtn.onclick = function() {
+                    sessionStorage.removeItem('juliasCraft_user');
+                    window.location.href = 'index.html';
+                };
+                loginBtn.parentNode.appendChild(logoutBtn);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+            checkLoginStatus();
+        });
+    </script>
+</body>
+</html>

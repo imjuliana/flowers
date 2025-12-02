@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Julia's Craft</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff9fb;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #ff6b8b 0%, #ff8e9e 100%);
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Brush Script MT', cursive;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        #cartCount {
+            background: white;
+            color: #ff6b8b;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        .contact-hero {
+            background: linear-gradient(rgba(255, 245, 248, 0.9), rgba(255, 245, 248, 0.9)), url('https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            padding: 100px 20px;
+            color: #333;
+        }
+        .contact-hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #ff6b8b;
+        }
+        .contact-container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+        @media (max-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        .contact-info {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .contact-form {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+        .contact-icon {
+            background: #ff6b8b;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        .contact-details h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #ff6b8b;
+            outline: none;
+        }
+        .btn {
+            display: inline-block;
+            background: #ff6b8b;
+            color: white;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #ff4b7b;
+            transform: translateY(-2px);
+        }
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .social-link {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff6b8b;
+            text-decoration: none;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+        .social-link:hover {
+            background: #ff6b8b;
+            color: white;
+            transform: translateY(-5px);
+        }
+        .business-hours {
+            background: #fff5f8;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        .business-hours h3 {
+            color: #ff6b8b;
+            margin-bottom: 15px;
+        }
+        .hours-table {
+            width: 100%;
+        }
+        .hours-table tr {
+            border-bottom: 1px solid #eee;
+        }
+        .hours-table td {
+            padding: 10px 0;
+        }
+        .hours-table td:last-child {
+            text-align: right;
+            font-weight: 500;
+        }
+        footer {
+            background: #ff6b8b;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+        }
+        .success-message {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">Julia's Craft 🌸</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop Flowers</a>
+            <a href="about.html">Our Story</a>
+            <a href="contact.html">Contact</a>
+            <a href="login.html" id="loginBtn">Login</a>
+            <a href="cart.html">🛒 Cart <span id="cartCount">0</span></a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="contact-hero">
+        <h1>Get in Touch</h1>
+        <p>We'd love to hear from you! Whether you have questions or special requests.</p>
+    </section>
+
+    <!-- Contact Container -->
+    <div class="contact-container">
+        <!-- Contact Information -->
+        <div class="contact-info">
+            <h2 style="color: #ff6b8b; margin-bottom: 30px;">Contact Information</h2>
+            
+            <div class="contact-item">
+                <div class="contact-icon">📞</div>
+                <div class="contact-details">
+                    <h3>Phone Number</h3>
+                    <p>0917-123-4567</p>
+                    <p>0922-987-6543</p>
+                </div>
+            </div>
+            
+            <div class="contact-item">
+                <div class="contact-icon">✉️</div>
+                <div class="contact-details">
+                    <h3>Email Address</h3>
+                    <p>julias.craft@gmail.com</p>
+                    <p>orders.juliascraft@gmail.com</p>
+                </div>
+            </div>
+            
+            <div class="contact-item">
+                <div class="contact-icon">📍</div>
+                <div class="contact-details">
+                    <h3>Location</h3>
+                    <p>123 Flower Street, Barangay Rosas</p>
+                    <p>Quezon City, Metro Manila</p>
+                </div>
+            </div>
+
+            <!-- Business Hours -->
+            <div class="business-hours">
+                <h3>Business Hours</h3>
+                <table class="hours-table">
+                    <tr>
+                        <td>Monday - Friday</td>
+                        <td>9:00 AM - 7:00 PM</td>
+                    </tr>
+                    <tr>
+                        <td>Saturday</td>
+                        <td>9:00 AM - 6:00 PM</td>
+                    </tr>
+                    <tr>
+                        <td>Sunday</td>
+                        <td>10:00 AM - 5:00 PM</td>
+                    </tr>
+                    <tr>
+                        <td>Holidays</td>
+                        <td>By appointment only</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Social Media -->
+            <div style="margin-top: 40px;">
+                <h3 style="color: #ff6b8b; margin-bottom: 20px;">Follow Us</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">📘</a>
+                    <a href="#" class="social-link">📷</a>
+                    <a href="#" class="social-link">💬</a>
+                    <a href="#" class="social-link">🐦</a>
+                    <a href="#" class="social-link">📹</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="contact-form">
+            <h2 style="color: #ff6b8b; margin-bottom: 30px;">Send Us a Message</h2>
+            
+            <div class="success-message" id="successMessage">
+                Thank you! Your message has been sent. We'll get back to you within 24 hours.
+            </div>
+            
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone">
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Subject *</label>
+                    <select id="subject" required>
+                        <option value="">Select a subject</option>
+                        <option value="order">Order Inquiry</option>
+                        <option value="custom">Custom Order Request</option>
+                        <option value="delivery">Delivery Questions</option>
+                        <option value="wholesale">Wholesale Inquiry</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Message *</label>
+                    <textarea id="message" rows="6" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div style="max-width: 1000px; margin: 60px auto; padding: 0 20px;">
+        <h2 style="text-align: center; color: #ff6b8b; margin-bottom: 40px;">Frequently Asked Questions</h2>
+        
+        <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #333; margin-bottom: 10px;">1. How long do handmade flowers last?</h3>
+                <p>Our handmade flowers are designed to last for years with proper care. Keep them away from direct sunlight and dust them gently.</p>
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #333; margin-bottom: 10px;">2. Do you accept custom orders?</h3>
+                <p>Yes! We love creating custom arrangements. Please contact us at least 1 week before you need the flowers.</p>
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #333; margin-bottom: 10px;">3. What are your delivery options?</h3>
+                <p>We offer delivery within Metro Manila (₱100) and can arrange shipping to other provinces (rates vary).</p>
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #333; margin-bottom: 10px;">4. Can I pick up my order?</h3>
+                <p>Yes, you can pick up your order at our location in Quezon City. Please contact us to schedule a pickup time.</p>
+            </div>
+            
+            <div>
+                <h3 style="color: #333; margin-bottom: 10px;">5. What payment methods do you accept?</h3>
+                <p>We accept Cash on Delivery, GCash, Maya, and bank transfers.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Julia's Craft - All flowers handmade with love</p>
+        <p>Contact: julias.craft@email.com | 09123456789</p>
+    </footer>
+
+    <script>
+        // Update Cart Count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+            const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        // Check Login Status
+        function checkLoginStatus() {
+            const user = JSON.parse(sessionStorage.getItem('juliasCraft_user') || 'null');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (user) {
+                loginBtn.textContent = `👋 ${user.name}`;
+                loginBtn.href = "profile.html";
+                
+                const logoutBtn = document.createElement('a');
+                logoutBtn.href = "#";
+                logoutBtn.textContent = "Logout";
+                logoutBtn.style.marginLeft = "10px";
+                logoutBtn.style.color = "white";
+                logoutBtn.style.textDecoration = "none";
+                logoutBtn.onclick = function() {
+                    sessionStorage.removeItem('juliasCraft_user');
+                    window.location.href = 'index.html';
+                };
+                loginBtn.parentNode.appendChild(logoutBtn);
+            }
+        }
+
+        // Contact Form Submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // Save contact message to localStorage
+            const contactMessages = JSON.parse(localStorage.getItem('juliasCraft_contacts') || '[]');
+            const newMessage = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                phone: document.getElementById('phone').value,
+                subject: subject,
+                message: message,
+                date: new Date().toISOString(),
+                status: 'unread'
+            };
+            
+            contactMessages.push(newMessage);
+            localStorage.setItem('juliasCraft_contacts', JSON.stringify(contactMessages));
+            
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Reset form
+            document.getElementById('contactForm').reset();
+            
+            // Scroll to success message
+            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+            
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 5000);
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+            checkLoginStatus();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Julia's Craft</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff9fb;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #ff6b8b 0%, #ff8e9e 100%);
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Brush Script MT', cursive;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        #cartCount {
+            background: white;
+            color: #ff6b8b;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        .checkout-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .checkout-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .checkout-header h1 {
+            font-size: 36px;
+            color: #ff6b8b;
+        }
+        .checkout-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 0 20px;
+            color: #999;
+        }
+        .step.active {
+            color: #ff6b8b;
+        }
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .step.active .step-number {
+            background: #ff6b8b;
+            color: white;
+        }
+        .checkout-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+        @media (max-width: 768px) {
+            .checkout-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        .checkout-form {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .order-summary {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        .form-section {
+            margin-bottom: 40px;
+        }
+        .form-section h2 {
+            color: #ff6b8b;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #ff6b8b;
+            outline: none;
+        }
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .payment-method {
+            border: 2px solid #eee;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .payment-method:hover {
+            border-color: #ff6b8b;
+        }
+        .payment-method.selected {
+            border-color: #ff6b8b;
+            background: #fff5f8;
+        }
+        .payment-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .order-items {
+            margin-bottom: 20px;
+        }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .summary-row.total {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b8b;
+            border-bottom: none;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #ff6b8b;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background: #ff4b7b;
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        footer {
+            background: #ff6b8b;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+        }
+        .gcash-details {
+            background: #fff5f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        .gcash-details p {
+            margin-bottom: 10px;
+        }
+        .qr-code {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .qr-code img {
+            max-width: 200px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">Julia's Craft 🌸</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop Flowers</a>
+            <a href="about.html">Our Story</a>
+            <a href="contact.html">Contact</a>
+            <a href="login.html" id="loginBtn">Login</a>
+            <a href="cart.html">🛒 Cart <span id="cartCount">0</span></a>
+        </div>
+    </nav>
+
+    <!-- Checkout Container -->
+    <div class="checkout-container">
+        <!-- Checkout Steps -->
+        <div class="checkout-steps">
+            <div class="step active">
+                <div class="step-number">1</div>
+                <div class="step-text">Shipping</div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-text">Payment</div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-text">Confirm</div>
+            </div>
+        </div>
+
+        <div class="checkout-content">
+            <!-- Checkout Form -->
+            <div class="checkout-form">
+                <form id="checkoutForm">
+                    <!-- Shipping Information -->
+                    <div class="form-section">
+                        <h2>Shipping Information</h2>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name *</label>
+                                <input type="text" id="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name *</label>
+                                <input type="text" id="lastName" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address">Complete Address *</label>
+                            <textarea id="address" rows="3" required></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">City *</label>
+                                <input type="text" id="city" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="province">Province *</label>
+                                <input type="text" id="province" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="zipCode">Zip Code *</label>
+                                <input type="text" id="zipCode" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="deliveryDate">Preferred Delivery Date</label>
+                                <input type="date" id="deliveryDate">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notes">Delivery Notes (Optional)</label>
+                            <textarea id="notes" rows="2" placeholder="e.g., Leave at gate, Call before delivery, etc."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="form-section">
+                        <h2>Payment Method</h2>
+                        
+                        <div class="payment-methods">
+                            <div class="payment-method" onclick="selectPayment('cod')">
+                                <div class="payment-icon">💵</div>
+                                <div>Cash on Delivery</div>
+                            </div>
+                            <div class="payment-method" onclick="selectPayment('gcash')">
+                                <div class="payment-icon">📱</div>
+                                <div>GCash</div>
+                            </div>
+                            <div class="payment-method" onclick="selectPayment('maya')">
+                                <div class="payment-icon">💳</div>
+                                <div>Maya</div>
+                            </div>
+                        </div>
+                        
+                        <input type="hidden" id="paymentMethod" required>
+                        
+                        <!-- GCash Details -->
+                        <div class="gcash-details" id="gcashDetails">
+                            <h3>GCash Payment Instructions</h3>
+                            <p>1. Send payment to: <strong>0917-123-4567</strong></p>
+                            <p>2. Account Name: <strong>Julia's Craft</strong></p>
+                            <p>3. Use your order number as reference</p>
+                            <p>4. Upload screenshot of payment confirmation below:</p>
+                            <input type="file" id="paymentProof" accept="image/*">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h2 style="color: #ff6b8b; margin-bottom: 20px;">Order Summary</h2>
+                
+                <div class="order-items" id="orderItems">
+                    <!-- Items will load here -->
+                </div>
+                
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="subtotal">₱0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery Fee</span>
+                    <span id="deliveryFee">₱100.00</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="totalAmount">₱0.00</span>
+                </div>
+                
+                <button class="btn" id="placeOrderBtn" onclick="placeOrder()">Place Order</button>
+                <a href="cart.html" class="btn" style="background: #666;">Back to Cart</a>
+                
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                    <p style="color: #666; font-size: 14px;">
+                        By placing your order, you agree to our 
+                        <a href="#" style="color: #ff6b8b;">Terms & Conditions</a> 
+                        and 
+                        <a href="#" style="color: #ff6b8b;">Privacy Policy</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Julia's Craft - All flowers handmade with love</p>
+        <p>Contact: julias.craft@email.com | 09123456789</p>
+    </footer>
+
+    <script>
+        let selectedPayment = '';
+        
+        // Load Cart Items
+        function loadOrderSummary() {
+            const cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+            const container = document.getElementById('orderItems');
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<p>Your cart is empty</p>';
+                document.getElementById('placeOrderBtn').disabled = true;
+                return;
+            }
+            
+            let itemsHtml = '';
+            cart.forEach(item => {
+                itemsHtml += `
+                    <div class="order-item">
+                        <div>
+                            <strong>${item.name}</strong>
+                            <div>Qty: ${item.quantity}</div>
+                        </div>
+                        <div>₱${(item.price * item.quantity).toLocaleString()}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = itemsHtml;
+            calculateTotal();
+        }
+
+        // Calculate Total
+        function calculateTotal() {
+            const cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const deliveryFee = 100;
+            const total = subtotal + deliveryFee;
+            
+            document.getElementById('subtotal').textContent = '₱' + subtotal.toLocaleString();
+            document.getElementById('deliveryFee').textContent = '₱' + deliveryFee.toLocaleString();
+            document.getElementById('totalAmount').textContent = '₱' + total.toLocaleString();
+        }
+
+        // Update Cart Count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+            const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        // Select Payment Method
+        function selectPayment(method) {
+            selectedPayment = method;
+            document.getElementById('paymentMethod').value = method;
+            
+            // Update UI
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            event.target.closest('.payment-method').classList.add('selected');
+            
+            // Show GCash details if selected
+            const gcashDetails = document.getElementById('gcashDetails');
+            gcashDetails.style.display = method === 'gcash' ? 'block' : 'none';
+        }
+
+        // Place Order
+        function placeOrder() {
+            const user = JSON.parse(sessionStorage.getItem('juliasCraft_user') || 'null');
+            const cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+            
+            if (!user) {
+                alert('Please login to place an order');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            if (cart.length === 0) {
+                alert('Your cart is empty');
+                return;
+            }
+            
+            if (!selectedPayment) {
+                alert('Please select a payment method');
+                return;
+            }
+            
+            // Get form data
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const address = document.getElementById('address').value;
+            const city = document.getElementById('city').value;
+            const province = document.getElementById('province').value;
+            const zipCode = document.getElementById('zipCode').value;
+            
+            // Validate required fields
+            if (!firstName || !lastName || !phone || !email || !address || !city || !province || !zipCode) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Calculate total
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const deliveryFee = 100;
+            const total = subtotal + deliveryFee;
+            
+            // Create order
+            const orders = JSON.parse(localStorage.getItem('juliasCraft_orders') || '[]');
+            const newOrder = {
+                id: Date.now(),
+                customerId: user.id,
+                customerName: `${firstName} ${lastName}`,
+                customerEmail: email,
+                customerPhone: phone,
+                items: [...cart],
+                totalAmount: total,
+                status: 'Pending',
+                paymentMethod: selectedPayment.toUpperCase(),
+                paymentStatus: selectedPayment === 'cod' ? 'Pending' : 'Paid',
+                deliveryAddress: {
+                    address: address,
+                    city: city,
+                    province: province,
+                    zipCode: zipCode
+                },
+                orderDate: new Date().toISOString(),
+                deliveryDate: document.getElementById('deliveryDate').value || '',
+                notes: document.getElementById('notes').value || ''
+            };
+            
+            // Update product stock
+            const products = JSON.parse(localStorage.getItem('juliasCraft_products') || '[]');
+            cart.forEach(cartItem => {
+                const product = products.find(p => p.id === cartItem.id);
+                if (product) {
+                    product.stock -= cartItem.quantity;
+                    if (product.stock <= 0) {
+                        product.available = false;
+                        product.stock = 0;
+                    }
+                }
+            });
+            
+            localStorage.setItem('juliasCraft_products', JSON.stringify(products));
+            
+            // Save order
+            orders.push(newOrder);
+            localStorage.setItem('juliasCraft_orders', JSON.stringify(orders));
+            
+            // Clear cart
+            localStorage.removeItem('juliasCraft_cart');
+            
+            // Show success message
+            alert(`Order placed successfully! Your order number is #${newOrder.id}`);
+            
+            // Redirect to order confirmation
+            window.location.href = `orders.html?order=${newOrder.id}`;
+        }
+
+        // Check Login Status
+        function checkLoginStatus() {
+            const user = JSON.parse(sessionStorage.getItem('juliasCraft_user') || 'null');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (user) {
+                loginBtn.textContent = `👋 ${user.name}`;
+                loginBtn.href = "profile.html";
+                
+                // Pre-fill form with user info
+                document.getElementById('firstName').value = user.name.split(' ')[0] || '';
+                document.getElementById('lastName').value = user.name.split(' ').slice(1).join(' ') || '';
+                document.getElementById('email').value = user.email || '';
+                document.getElementById('phone').value = user.contact || '';
+                document.getElementById('address').value = user.address || '';
+                
+                const logoutBtn = document.createElement('a');
+                logoutBtn.href = "#";
+                logoutBtn.textContent = "Logout";
+                logoutBtn.style.marginLeft = "10px";
+                logoutBtn.style.color = "white";
+                logoutBtn.style.textDecoration = "none";
+                logoutBtn.onclick = function() {
+                    sessionStorage.removeItem('juliasCraft_user');
+                    window.location.href = 'index.html';
+                };
+                loginBtn.parentNode.appendChild(logoutBtn);
+            } else {
+                // Redirect to login if not logged in
+                alert('Please login to checkout');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrderSummary();
+            updateCartCount();
+            checkLoginStatus();
+            
+            // Set minimum date for delivery (tomorrow)
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const minDate = tomorrow.toISOString().split('T')[0];
+            document.getElementById('deliveryDate').min = minDate;
+        });
+    </script>
+</body>
+</html>

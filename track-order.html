@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Your Order - Julia's Craft</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff9fb;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #ff6b8b 0%, #ff8e9e 100%);
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+        }
+        .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Brush Script MT', cursive;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        #cartCount {
+            background: white;
+            color: #ff6b8b;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        .track-order-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .track-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .track-header h1 {
+            font-size: 36px;
+            color: #ff6b8b;
+            margin-bottom: 10px;
+        }
+        .search-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        .btn {
+            display: inline-block;
+            background: #ff6b8b;
+            color: white;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #ff4b7b;
+            transform: translateY(-2px);
+        }
+        .btn-track {
+            background: #4CAF50;
+            width: 100%;
+            font-size: 18px;
+            padding: 18px;
+        }
+        .order-result {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+        .order-result.show {
+            display: block;
+        }
+        .order-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .info-card {
+            background: #f8f8f8;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .info-label {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        .info-value {
+            font-weight: 500;
+            color: #333;
+            font-size: 18px;
+        }
+        .tracking-timeline {
+            margin: 40px 0;
+            position: relative;
+            padding-left: 30px;
+        }
+        .timeline-item {
+            position: relative;
+            padding: 20px 0;
+            border-left: 3px solid #eee;
+            padding-left: 30px;
+        }
+        .timeline-item.active {
+            border-left-color: #4CAF50;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: -10px;
+            top: 25px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #eee;
+        }
+        .timeline-item.active .timeline-dot {
+            background: #4CAF50;
+            box-shadow: 0 0 0 5px rgba(76, 175, 80, 0.2);
+        }
+        .timeline-item.completed .timeline-dot {
+            background: #4CAF50;
+        }
+        .timeline-content h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .timeline-content p {
+            color: #666;
+            font-size: 14px;
+        }
+        .order-items {
+            margin-top: 30px;
+        }
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-right: 15px;
+        }
+        footer {
+            background: #ff6b8b;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+        }
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .login-prompt {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo-container">
+            <img src="logo.jpg" alt="Julia's Craft Logo" class="logo-img" id="storeLogo">
+            <div class="logo-text">Julia's Craft 🌸</div>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop Flowers</a>
+            <a href="about.html">Our Story</a>
+            <a href="contact.html">Contact</a>
+            <a href="track-order.html" style="background: rgba(255,255,255,0.2);">📦 Track Order</a>
+            <a href="login.html" id="loginBtn">Login</a>
+            <a href="cart.html">🛒 Cart <span id="cartCount">0</span></a>
+        </div>
+    </nav>
+
+    <!-- Track Order Container -->
+    <div class="track-order-container">
+        <div class="track-header">
+            <h1>Track Your Order</h1>
+            <p>Enter your order number or email to track your order status</p>
+        </div>
+
+        <!-- Login Prompt -->
+        <div class="login-prompt" id="loginPrompt">
+            <h2 style="color: #ff6b8b; margin-bottom: 20px;">Already Logged In?</h2>
+            <p>If you're logged in, you can view all your orders in your profile.</p>
+            <a href="profile.html" class="btn" style="margin-top: 20px;">Go to My Orders</a>
+            <p style="margin-top: 20px; color: #666;">Or track as guest below:</p>
+        </div>
+
+        <!-- Search Box -->
+        <div class="search-box">
+            <div class="error-message" id="errorMessage">
+                Order not found. Please check your order number and email.
+            </div>
+            
+            <form id="trackOrderForm">
+                <div class="form-group">
+                    <label for="orderNumber">Order Number</label>
+                    <input type="text" id="orderNumber" placeholder="e.g., 123456" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="your.email@example.com" required>
+                </div>
+                
+                <button type="submit" class="btn btn-track">Track Order</button>
+            </form>
+        </div>
+
+        <!-- Order Results -->
+        <div class="order-result" id="orderResult">
+            <!-- Order details will be loaded here -->
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Julia's Craft - All flowers handmade with love</p>
+        <p>Contact: julias.craft@email.com | 09123456789</p>
+    </footer>
+
+    <script>
+        // Update Cart Count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('juliasCraft_cart') || '[]');
+            const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        // Check Login Status
+        function checkLoginStatus() {
+            const user = JSON.parse(sessionStorage.getItem('juliasCraft_user') || 'null');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (user) {
+                loginBtn.textContent = `👋 ${user.name}`;
+                loginBtn.href = "profile.html";
+                
+                // Hide login prompt
+                document.getElementById('loginPrompt').style.display = 'none';
+                
+                // Add logout button
+                const logoutBtn = document.createElement('a');
+                logoutBtn.href = "#";
+                logoutBtn.textContent = "Logout";
+                logoutBtn.style.marginLeft = "10px";
+                logoutBtn.style.color = "white";
+                logoutBtn.style.textDecoration = "none";
+                logoutBtn.onclick = function() {
+                    sessionStorage.removeItem('juliasCraft_user');
+                    window.location.href = 'index.html';
+                };
+                loginBtn.parentNode.appendChild(logoutBtn);
+                
+                // Pre-fill email for logged in users
+                document.getElementById('email').value = user.email;
+            }
+        }
+
+        // Track Order Form Submission
+        document.getElementById('trackOrderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const orderNumber = parseInt(document.getElementById('orderNumber').value);
+            const email = document.getElementById('email').value;
+            
+            if (!orderNumber || !email) {
+                showError('Please enter both order number and email');
+                return;
+            }
+            
+            // Get orders from localStorage
+            const orders = JSON.parse(localStorage.getItem('juliasCraft_orders') || '[]');
+            const order = orders.find(o => o.id === orderNumber && o.customerEmail === email);
+            
+            if (!order) {
+                showError('Order not found. Please check your order number and email.');
+                return;
+            }
+            
+            // Display order details
+            displayOrderDetails(order);
+        });
+
+        // Display Order Details
+        function displayOrderDetails(order) {
+            const container = document.getElementById('orderResult');
+            
+            // Define tracking steps
+            const steps = [
+                { status: 'Pending', label: 'Order Placed', description: 'We have received your order' },
+                { status: 'Preparing', label: 'Preparing Order', description: 'Julia is crafting your flowers' },
+                { status: 'Ready', label: 'Ready for Delivery', description: 'Your order is packed and ready' },
+                { status: 'Delivered', label: 'Delivered', description: 'Your order has been delivered' }
+            ];
+            
+            // Find current step index
+            const currentStepIndex = steps.findIndex(step => step.status === order.status);
+            
+            let timelineHtml = '';
+            steps.forEach((step, index) => {
+                let stepClass = '';
+                if (index < currentStepIndex) {
+                    stepClass = 'completed';
+                } else if (index === currentStepIndex) {
+                    stepClass = 'active';
+                }
+                
+                timelineHtml += `
+                    <div class="timeline-item ${stepClass}">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h3>${step.label}</h3>
+                            <p>${step.description}</p>
+                            ${index === currentStepIndex && order.status === 'Delivered' && order.deliveryDate ? 
+                                `<p style="color: #4CAF50; font-weight: bold;">Delivered on: ${new Date(order.deliveryDate).toLocaleDateString()}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Calculate item total
+            const itemTotal = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            const html = `
+                <h2 style="color: #ff6b8b; margin-bottom: 30px;">Order #${order.id}</h2>
+                
+                <div class="order-info-grid">
+                    <div class="info-card">
+                        <div class="info-label">Order Date</div>
+                        <div class="info-value">${new Date(order.orderDate).toLocaleDateString()}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Status</div>
+                        <div class="info-value" style="color: ${getStatusColor(order.status)};">
+                            ${order.status}
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Total Amount</div>
+                        <div class="info-value">₱${order.totalAmount.toLocaleString()}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Payment</div>
+                        <div class="info-value">${order.paymentMethod}</div>
+                    </div>
+                </div>
+                
+                <h3 style="color: #333; margin-bottom: 20px;">Order Tracking</h3>
+                <div class="tracking-timeline">
+                    ${timelineHtml}
+                </div>
+                
+                <h3 style="color: #333; margin-bottom: 15px;">Order Items</h3>
+                <div class="order-items">
+                    ${order.items.map(item => `
+                        <div class="order-item">
+                            <img src="${item.image}" alt="${item.name}" class="item-image">
+                            <div style="flex: 1;">
+                                <div style="font-weight: bold;">${item.name}</div>
+                                <div style="color: #666; font-size: 14px;">Quantity: ${item.quantity}</div>
+                            </div>
+                            <div style="font-weight: bold;">₱${(item.price * item.quantity).toLocaleString()}</div>
+                        </div>
+                    `).join('')}
+                    
+                    <div style="padding: 20px; border-top: 2px solid #eee; margin-top: 20px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Items Total:</span>
+                            <span>₱${itemTotal.toLocaleString()}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Delivery Fee:</span>
+                            <span>₱100.00</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 20px; font-weight: bold; color: #ff6b8b;">
+                            <span>Total Paid:</span>
+                            <span>₱${order.totalAmount.toLocaleString()}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px; padding: 20px; background: #f8f8f8; border-radius: 10px;">
+                    <h4 style="color: #333; margin-bottom: 10px;">Delivery Address</h4>
+                    <p>${order.customerName}</p>
+                    <p>${order.deliveryAddress.address}</p>
+                    <p>${order.deliveryAddress.city}, ${order.deliveryAddress.province} ${order.deliveryAddress.zipCode}</p>
+                    <p>📞 ${order.customerPhone}</p>
+                </div>
+                
+                <div style="margin-top: 40px; text-align: center;">
+                    <button class="btn" onclick="window.print()">Print Order Details</button>
+                    <a href="contact.html" class="btn" style="background: #666; margin-left: 10px;">Contact Support</a>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+            container.classList.add('show');
+            
+            // Scroll to results
+            container.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Get Status Color
+        function getStatusColor(status) {
+            switch(status) {
+                case 'Pending': return '#ff9800';
+                case 'Preparing': return '#2196f3';
+                case 'Ready': return '#4caf50';
+                case 'Delivered': return '#8bc34a';
+                default: return '#666';
+            }
+        }
+
+        // Show Error Message
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Load Custom Logo
+        function loadCustomLogo() {
+            const logoImg = document.getElementById('storeLogo');
+            logoImg.onerror = function() {
+                this.src = "flower/logo.jpg";
+            };
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+            checkLoginStatus();
+            loadCustomLogo();
+        });
+    </script>
+</body>
+</html>

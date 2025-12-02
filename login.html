@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Julia's Craft</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #fff9fb 0%, #ffe6ee 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #ff6b8b 0%, #ff8e9e 100%);
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+        }
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Brush Script MT', cursive;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        .login-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(255, 107, 139, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            color: #ff6b8b;
+            border-bottom: 3px solid #ff6b8b;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        .form-group input:focus {
+            border-color: #ff6b8b;
+            outline: none;
+        }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: #ff6b8b;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #ff4b7b;
+            transform: translateY(-2px);
+        }
+        .seller-login-btn {
+            background: #4CAF50;
+            margin-top: 15px;
+        }
+        .seller-login-btn:hover {
+            background: #45a049;
+        }
+        .error {
+            color: #ff4444;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        .login-note {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        .seller-note {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+        }
+        footer {
+            background: #ff6b8b;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .role-selection {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .role-btn {
+            flex: 1;
+            padding: 10px;
+            background: #f0f0f0;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .role-btn.active {
+            background: #ff6b8b;
+            color: white;
+            border-color: #ff6b8b;
+        }
+        @media (max-width: 768px) {
+            .login-box {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo-container">
+            <img src="logo.jpg" alt="Julia's Craft Logo" class="logo-img" id="storeLogo">
+            <div class="logo-text">Julia's Craft 🌸</div>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop</a>
+        </div>
+    </nav>
+
+    <!-- Login Container -->
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-tabs">
+                <button class="tab-btn active" onclick="switchTab('customer')">Customer</button>
+                <button class="tab-btn" onclick="switchTab('seller')">Seller</button>
+            </div>
+
+            <!-- Customer Login/Register -->
+            <div id="customerTab" class="tab-content active">
+                <div id="customerLogin">
+                    <h2 style="text-align: center; margin-bottom: 30px; color: #ff6b8b;">Customer Login</h2>
+                    <form id="customerLoginForm">
+                        <div class="form-group">
+                            <label for="customerEmail">Email Address</label>
+                            <input type="email" id="customerEmail" required>
+                            <div class="error" id="customerEmailError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerPassword">Password</label>
+                            <input type="password" id="customerPassword" required>
+                            <div class="error" id="customerPasswordError"></div>
+                        </div>
+                        <button type="submit" class="btn">Login as Customer</button>
+                    </form>
+                    
+                    <div class="login-note">
+                        New customer? <a href="#" style="color: #ff6b8b;" onclick="showCustomerRegister()">Create account</a>
+                    </div>
+                </div>
+
+                <div id="customerRegister" style="display: none;">
+                    <h2 style="text-align: center; margin-bottom: 30px; color: #ff6b8b;">Create Customer Account</h2>
+                    <form id="customerRegisterForm">
+                        <div class="form-group">
+                            <label for="regName">Full Name</label>
+                            <input type="text" id="regName" required>
+                            <div class="error" id="regNameError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="regEmail">Email Address</label>
+                            <input type="email" id="regEmail" required>
+                            <div class="error" id="regEmailError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="regPassword">Password (min. 6 characters)</label>
+                            <input type="password" id="regPassword" required minlength="6">
+                            <div class="error" id="regPasswordError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="regPhone">Phone Number</label>
+                            <input type="tel" id="regPhone">
+                        </div>
+                        <button type="submit" class="btn">Create Customer Account</button>
+                    </form>
+                    
+                    <div class="login-note">
+                        Already have account? <a href="#" style="color: #ff6b8b;" onclick="showCustomerLogin()">Login here</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seller Login (NO REGISTRATION) -->
+            <div id="sellerTab" class="tab-content">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #ff6b8b;">Seller Login</h2>
+                
+                <div class="seller-note">
+                    <p><strong>Note:</strong> Seller accounts are created by store owner only.</p>
+                    <p>Contact admin for seller access.</p>
+                </div>
+                
+                <form id="sellerLoginForm">
+                    <div class="form-group">
+                        <label for="sellerEmail">Seller Email</label>
+                        <input type="email" id="sellerEmail" value="julia@seller.com" readonly style="background: #f8f8f8;">
+                    </div>
+                    <div class="form-group">
+                        <label for="sellerPassword">Password</label>
+                        <input type="password" id="sellerPassword" required>
+                        <div class="error" id="sellerPasswordError"></div>
+                    </div>
+                    <button type="submit" class="btn seller-login-btn">Login as Seller</button>
+                </form>
+                
+                <div class="login-note" style="margin-top: 20px;">
+                    <p>Default seller credentials:</p>
+                    <p>Email: <strong>julia@seller.com</strong></p>
+                    <p>Password: <strong>seller123</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Julia's Craft - Handmade Flowers</p>
+    </footer>
+
+    <script>
+        // Initialize Users
+        function initializeUsers() {
+            if (!localStorage.getItem('juliasCraft_users')) {
+                // Create default seller account
+                const defaultUsers = [
+                    {
+                        id: 1,
+                        name: "Julia",
+                        email: "julia@seller.com",
+                        password: "seller123",
+                        role: "seller",
+                        contact: "09123456789",
+                        address: "Flower Shop Address",
+                        joined: new Date().toISOString()
+                    }
+                ];
+                localStorage.setItem('juliasCraft_users', JSON.stringify(defaultUsers));
+            }
+        }
+
+        // Switch between tabs
+        function switchTab(tab) {
+            // Update tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Tab').classList.add('active');
+        }
+
+        // Show customer register form
+        function showCustomerRegister() {
+            document.getElementById('customerLogin').style.display = 'none';
+            document.getElementById('customerRegister').style.display = 'block';
+        }
+
+        // Show customer login form
+        function showCustomerLogin() {
+            document.getElementById('customerRegister').style.display = 'none';
+            document.getElementById('customerLogin').style.display = 'block';
+        }
+
+        // Customer Login
+        document.getElementById('customerLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('customerEmail').value;
+            const password = document.getElementById('customerPassword').value;
+            
+            // Reset errors
+            document.getElementById('customerEmailError').style.display = 'none';
+            document.getElementById('customerPasswordError').style.display = 'none';
+            
+            // Get users from localStorage
+            const users = JSON.parse(localStorage.getItem('juliasCraft_users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password && u.role === 'customer');
+            
+            if (user) {
+                // Store user in session
+                sessionStorage.setItem('juliasCraft_user', JSON.stringify(user));
+                window.location.href = 'profile.html';
+            } else {
+                document.getElementById('customerPasswordError').textContent = 'Invalid email or password';
+                document.getElementById('customerPasswordError').style.display = 'block';
+            }
+        });
+
+        // Customer Register
+        document.getElementById('customerRegisterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const phone = document.getElementById('regPhone').value;
+            
+            // Reset errors
+            document.querySelectorAll('#customerRegisterForm .error').forEach(error => {
+                error.style.display = 'none';
+            });
+            
+            // Validation
+            let valid = true;
+            
+            if (name.length < 2) {
+                document.getElementById('regNameError').textContent = 'Name must be at least 2 characters';
+                document.getElementById('regNameError').style.display = 'block';
+                valid = false;
+            }
+            
+            if (!email.includes('@')) {
+                document.getElementById('regEmailError').textContent = 'Please enter a valid email';
+                document.getElementById('regEmailError').style.display = 'block';
+                valid = false;
+            }
+            
+            if (password.length < 6) {
+                document.getElementById('regPasswordError').textContent = 'Password must be at least 6 characters';
+                document.getElementById('regPasswordError').style.display = 'block';
+                valid = false;
+            }
+            
+            if (!valid) return;
+            
+            // Get existing users
+            const users = JSON.parse(localStorage.getItem('juliasCraft_users') || '[]');
+            
+            // Check if email already exists
+            if (users.find(u => u.email === email)) {
+                document.getElementById('regEmailError').textContent = 'Email already registered';
+                document.getElementById('regEmailError').style.display = 'block';
+                return;
+            }
+            
+            // Create new customer user
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                password: password,
+                role: 'customer',
+                contact: phone,
+                address: "",
+                joined: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('juliasCraft_users', JSON.stringify(users));
+            
+            // Auto login and redirect
+            sessionStorage.setItem('juliasCraft_user', JSON.stringify(newUser));
+            alert('Registration successful! Welcome to Julia\'s Craft!');
+            window.location.href = 'profile.html';
+        });
+
+        // Seller Login (NO REGISTRATION)
+        document.getElementById('sellerLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('sellerEmail').value;
+            const password = document.getElementById('sellerPassword').value;
+            
+            // Reset error
+            document.getElementById('sellerPasswordError').style.display = 'none';
+            
+            // Get users from localStorage
+            const users = JSON.parse(localStorage.getItem('juliasCraft_users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password && u.role === 'seller');
+            
+            if (user) {
+                // Store user in session
+                sessionStorage.setItem('juliasCraft_user', JSON.stringify(user));
+                window.location.href = 'seller-dashboard.html';
+            } else {
+                document.getElementById('sellerPasswordError').textContent = 'Invalid password';
+                document.getElementById('sellerPasswordError').style.display = 'block';
+            }
+        });
+
+        // Load Custom Logo
+        function loadCustomLogo() {
+            const logoImg = document.getElementById('storeLogo');
+            logoImg.onerror = function() {
+                this.src = "flower/logo.jpg";
+            };
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeUsers();
+            loadCustomLogo();
+        });
+    </script>
+</body>
+</html>
